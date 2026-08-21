@@ -1,16 +1,24 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { LoyaltyCard } from './models/loyalty-card';
 
-export const helloWorldLambda = async (_event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+export const getLoyaltyCards = async (
+    _event: APIGatewayProxyEvent,
+): Promise<APIGatewayProxyResult> => {
     try {
         return {
             statusCode: 200,
-            body: JSON.stringify({
-                message: 'hello world',
-            }),
+            body: JSON.stringify([
+                {
+                    id: '10',
+                    customerName: 'Axel',
+                    points: 0,
+                    createdAt: new Date().toISOString(),
+                },
+            ]),
         };
     } catch (err) {
         console.log(err);
+
         return {
             statusCode: 500,
             body: JSON.stringify({
@@ -20,7 +28,36 @@ export const helloWorldLambda = async (_event: APIGatewayProxyEvent): Promise<AP
     }
 };
 
-export const createLoyaltyCard = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+export const getLoyaltyCard = async (
+    event: APIGatewayProxyEvent,
+): Promise<APIGatewayProxyResult> => {
+    try {
+        const id = event.pathParameters?.id;
+
+        return {
+            statusCode: 200,
+            body: JSON.stringify({
+                id,
+                customerName: 'Axel',
+                points: 0,
+                createdAt: new Date().toISOString(),
+            }),
+        };
+    } catch (err) {
+        console.log(err);
+
+        return {
+            statusCode: 500,
+            body: JSON.stringify({
+                message: 'some error happened',
+            }),
+        };
+    }
+};
+
+export const createLoyaltyCard = async (
+    event: APIGatewayProxyEvent,
+): Promise<APIGatewayProxyResult> => {
     try {
         const body = JSON.parse(event.body ?? '{}');
         const loyaltyCard: LoyaltyCard = {
