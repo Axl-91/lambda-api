@@ -1,5 +1,8 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { LoyaltyCard } from './models/loyalty-card';
+import { LoyaltyCardService } from './services/loyalty-card-service';
+
+const loyaltyCardService = new LoyaltyCardService();
 
 export const getLoyaltyCards = async (
     _event: APIGatewayProxyEvent,
@@ -60,20 +63,11 @@ export const createLoyaltyCard = async (
 ): Promise<APIGatewayProxyResult> => {
     try {
         const body = JSON.parse(event.body ?? '{}');
-        const loyaltyCard: LoyaltyCard = {
-            id: '1',
-            customerName: body.customer_name,
-            points: 0,
-            createdAt: new Date().toISOString(),
-        };
-
-        console.log(loyaltyCard);
+        const loyaltyCard = await loyaltyCardService.create(body.customerName);
 
         return {
             statusCode: 201,
-            body: JSON.stringify({
-                message: 'Created',
-            }),
+            body: JSON.stringify(loyaltyCard),
         };
     } catch (err) {
         console.log(err);
