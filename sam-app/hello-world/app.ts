@@ -6,8 +6,6 @@ export const helloWorldLambda = async (event: APIGatewayProxyEvent): Promise<API
             statusCode: 200,
             body: JSON.stringify({
                 message: 'hello world',
-                method: event.httpMethod,
-                event: event.path,
             }),
         };
     } catch (err) {
