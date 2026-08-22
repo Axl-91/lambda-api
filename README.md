@@ -87,9 +87,9 @@ All AWS services are simulated locally for development and testing.
 
 ### 6. CSV Import Pipeline
 
-* [ ] Configure S3 locally
-* [ ] Create Lambda triggered by new CSV files
-* [ ] Parse CSV files
+* [x] Configure S3 locally
+* [x] Create Lambda triggered by new CSV files
+* [x] Parse CSV files
 * [ ] Send each loyalty card to SQS
 * [ ] Configure SQS locally
 * [ ] Create Lambda triggered by SQS
