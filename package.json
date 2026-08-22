@@ -7,6 +7,8 @@
   "license": "MIT",
   "scripts": {
     "unit": "jest",
+    "build": "sam build",
+    "sam": "npm run build && sam local start-api --docker-network lambda-api",
     "lint": "eslint '*.ts' --quiet --fix",
     "compile": "tsc",
     "test": "npm run compile && npm run unit"
