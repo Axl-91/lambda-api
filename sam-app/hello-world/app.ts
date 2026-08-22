@@ -1,23 +1,21 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
-import { LoyaltyCard } from './models/loyalty-card';
 import { LoyaltyCardService } from './services/loyalty-card-service';
+import { LoyaltyCardRepository } from './repositories/loyalty-card-repository';
+import { InvalidLoyaltyCardError, LoyaltyCardNotFoundError } from './errors/loyalty-cards-errors';
 
-const loyaltyCardService = new LoyaltyCardService();
+const repository = new LoyaltyCardRepository(process.env.LOYALTY_CARDS_TABLE!);
+
+const loyaltyCardService = new LoyaltyCardService(repository);
 
 export const getLoyaltyCards = async (
     _event: APIGatewayProxyEvent,
 ): Promise<APIGatewayProxyResult> => {
     try {
+        const loyaltyCards = await loyaltyCardService.getAll();
+
         return {
             statusCode: 200,
-            body: JSON.stringify([
-                {
-                    id: '10',
-                    customerName: 'Axel',
-                    points: 0,
-                    createdAt: new Date().toISOString(),
-                },
-            ]),
+            body: JSON.stringify(loyaltyCards),
         };
     } catch (err) {
         console.log(err);
@@ -36,23 +34,39 @@ export const getLoyaltyCard = async (
 ): Promise<APIGatewayProxyResult> => {
     try {
         const id = event.pathParameters?.id;
+        console.log(`El id es ${id}`);
+
+        const loyaltyCard = await loyaltyCardService.getById(id ?? '');
 
         return {
             statusCode: 200,
-            body: JSON.stringify({
-                id,
-                customerName: 'Axel',
-                points: 0,
-                createdAt: new Date().toISOString(),
-            }),
+            body: JSON.stringify(loyaltyCard),
         };
     } catch (err) {
         console.log(err);
 
+        if (err instanceof InvalidLoyaltyCardError) {
+            return {
+                statusCode: 400,
+                body: JSON.stringify({
+                    message: err.message,
+                }),
+            };
+        }
+
+        if (err instanceof LoyaltyCardNotFoundError) {
+            return {
+                statusCode: 404,
+                body: JSON.stringify({
+                    message: err.message,
+                }),
+            };
+        }
+
         return {
             statusCode: 500,
             body: JSON.stringify({
-                message: 'some error happened',
+                message: 'Internal server error',
             }),
         };
     }

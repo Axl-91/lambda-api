@@ -4,3 +4,9 @@ services:
     ports:
       - "8000:8000"
     command: "-jar DynamoDBLocal.jar -sharedDb"
+    networks:
+      - lambda-api
+
+networks:
+  lambda-api:
+    name: lambda-api

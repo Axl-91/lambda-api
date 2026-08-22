@@ -17,12 +17,30 @@ Globals:
   Api:
     TracingEnabled: true
 Resources:
+  LoyaltyCardsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: LoyaltyCards
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
   GetLoyaltyCardsFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: hello-world/
       Handler: app.getLoyaltyCards
       Runtime: nodejs22.x
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref LoyaltyCardsTable
+      Environment:
+        Variables:
+          LOYALTY_CARDS_TABLE: LoyaltyCards
+          DYNAMODB_ENDPOINT: http://dynamodb:8000
       Events:
         GetLoyaltyCard:
           Type: Api
@@ -43,6 +61,13 @@ Resources:
       CodeUri: hello-world/
       Handler: app.getLoyaltyCard
       Runtime: nodejs22.x
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref LoyaltyCardsTable
+      Environment:
+        Variables:
+          LOYALTY_CARDS_TABLE: LoyaltyCards
+          DYNAMODB_ENDPOINT: http://dynamodb:8000
       Events:
         GetLoyaltyCard:
           Type: Api
@@ -63,6 +88,13 @@ Resources:
       CodeUri: hello-world/
       Handler: app.createLoyaltyCard 
       Runtime: nodejs22.x
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref LoyaltyCardsTable
+      Environment:
+        Variables:
+          LOYALTY_CARDS_TABLE: LoyaltyCards
+          DYNAMODB_ENDPOINT: http://dynamodb:8000
       Events:
         CreateLoyaltyCard:
           Type: Api
@@ -91,3 +123,4 @@ Resources:
       ResourceGroupName:
         Ref: ApplicationResourceGroup
       AutoConfigurationEnabled: 'true'
+
