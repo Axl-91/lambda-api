@@ -2,9 +2,10 @@ import { LoyaltyCard } from '../models/loyalty-card';
 import { v4 as uuidv4 } from 'uuid';
 import { LoyaltyCardRepository } from '../repositories/loyalty-card-repository';
 import { InvalidLoyaltyCardError, LoyaltyCardNotFoundError } from '../errors/loyalty-cards-errors';
+import { ILoyaltyCardRepository } from '../repositories/loyalty-card-repository.interface';
 
 export class LoyaltyCardService {
-    constructor(private readonly repository: LoyaltyCardRepository) {}
+    constructor(private readonly repository: ILoyaltyCardRepository) {}
 
     async create(customerName: string): Promise<LoyaltyCard> {
         if (typeof customerName !== 'string') {

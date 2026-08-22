@@ -6,12 +6,11 @@
   "author": "SAM CLI",
   "license": "MIT",
   "scripts": {
-    "unit": "jest",
     "build": "sam build",
     "sam": "npm run build && sam local start-api --docker-network lambda-api",
     "lint": "eslint '*.ts' --quiet --fix",
     "compile": "tsc",
-    "test": "npm run compile && npm run unit"
+    "test": "npm run compile && jest"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.1116.0",

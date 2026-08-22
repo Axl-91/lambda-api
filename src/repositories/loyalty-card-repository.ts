@@ -1,6 +1,7 @@
 import { DynamoDBClient, ScanCommand } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient, GetCommand, PutCommand } from '@aws-sdk/lib-dynamodb';
 import { LoyaltyCard } from '../models/loyalty-card';
+import { ILoyaltyCardRepository } from './loyalty-card-repository.interface';
 
 const client = new DynamoDBClient({
     region: process.env.AWS_REGION ?? 'us-east-1',
@@ -9,7 +10,7 @@ const client = new DynamoDBClient({
 
 const dynamoDb = DynamoDBDocumentClient.from(client);
 
-export class LoyaltyCardRepository {
+export class LoyaltyCardRepository implements ILoyaltyCardRepository {
     constructor(private readonly tableName: string) {}
 
     private mapToLoyaltyCard(item: Record<string, unknown>): LoyaltyCard {
@@ -29,6 +30,7 @@ export class LoyaltyCardRepository {
             }),
         );
     }
+
     async getById(id: string): Promise<LoyaltyCard | undefined> {
         const result = await dynamoDb.send(
             new GetCommand({
