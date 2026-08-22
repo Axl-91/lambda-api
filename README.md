@@ -79,7 +79,7 @@ All AWS services are simulated locally for development and testing.
 
 * [x] Configure Jest
 * [x] Add Lambda handler tests
-* [ ] Add service unit tests
+* [x] Add service unit tests
 * [ ] Add repository tests
 * [ ] Add validation/error tests
 * [ ] Mock DynamoDB where appropriate
