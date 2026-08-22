@@ -56,7 +56,6 @@ All AWS services are simulated locally for development and testing.
 | GET    | `/loyalty-cards`      | Get all loyalty cards    | 🚧 In progress |
 
 ## Progress
-
 ### 1. Create Loyalty Card
 
 * [x] Create `POST /loyalty-cards` endpoint
@@ -68,33 +67,38 @@ All AWS services are simulated locally for development and testing.
 * [x] Initialize `points` to `0`
 * [x] Generate `createdAt`
 * [x] Test the endpoint locally with SAM
-* [ ] Persist the loyalty card in DynamoDB
+* [x] Persist the loyalty card in DynamoDB
 
 ### 2. DynamoDB & Repository
 
-* [ ] Configure DynamoDB locally
-* [ ] Create the loyalty cards table
-* [ ] Create `LoyaltyCardRepository`
-* [ ] Implement `create`
-* [ ] Implement `get`
-* [ ] Implement `getAll`
-* [ ] Connect `Service → Repository → DynamoDB`
+* [x] Configure DynamoDB locally
+* [x] Create the loyalty cards table
+* [x] Create `LoyaltyCardRepository`
+* [x] Implement `create`
+* [x] Implement `get`
+* [x] Implement `getAll`
+* [x] Connect `Service → Repository → DynamoDB`
+* [x] Configure DynamoDB environment variables
+* [x] Configure Lambda DynamoDB permissions
+* [x] Map DynamoDB items to `LoyaltyCard`
 
 ### 3. GET Endpoints
 
-* [ ] Implement `GET /loyalty-cards/{id}`
-* [ ] Implement `GET /loyalty-cards`
-* [ ] Retrieve data from DynamoDB
-* [ ] Handle `404 Not Found`
-* [ ] Handle database errors
+* [x] Implement `GET /loyalty-cards/{id}`
+* [x] Implement `GET /loyalty-cards`
+* [x] Retrieve data from DynamoDB
+* [x] Handle `404 Not Found`
+* [x] Handle database errors
+* [x] Test both endpoints locally with SAM
 
 ### 4. Architecture & Error Handling
 
-* [ ] Separate Lambda handlers/controllers from business logic
-* [ ] Keep business logic inside services
-* [ ] Keep database access inside repositories
-* [ ] Define application/domain errors
-* [ ] Map errors to appropriate HTTP status codes (`400`, `404`, `500`, etc.)
+* [x] Separate Lambda handlers/controllers from business logic
+* [x] Keep business logic inside services
+* [x] Keep database access inside repositories
+* [x] Define application/domain errors
+* [x] Map errors to appropriate HTTP status codes (`400`, `404`, `500`, etc.)
+* [ ] Centralize HTTP error handling if it becomes repetitive
 
 ### 5. Testing
 
@@ -115,7 +119,8 @@ All AWS services are simulated locally for development and testing.
 * [ ] Configure SQS locally
 * [ ] Create Lambda triggered by SQS
 * [ ] Process SQS messages
-* [ ] Persist cards in DynamoDB
+* [ ] Reuse `LoyaltyCardService` to persist cards in DynamoDB
+* [ ] Handle failed messages and retries
 * [ ] Test the complete pipeline locally
 
 ```text
@@ -124,14 +129,27 @@ CSV → S3 → Lambda → SQS → Lambda → DynamoDB
 
 ### 7. Local AWS Infrastructure
 
-* [ ] Configure all required AWS resources in `template.yaml`
-* [ ] Configure DynamoDB
+* [x] Configure API Gateway
+* [x] Configure DynamoDB
+* [x] Configure Lambda permissions / IAM
+* [x] Configure Lambda environment variables
+* [x] Configure Docker network for local AWS services
 * [ ] Configure S3
 * [ ] Configure SQS
-* [ ] Configure Lambda permissions / IAM
-* [ ] Configure API Gateway
+* [ ] Configure all required AWS resources in `template.yaml`
+* [ ] Automate DynamoDB table creation
+* [ ] Persist DynamoDB Local data across container restarts
 * [ ] Make the complete architecture runnable locally
 * [ ] Test the complete application locally with SAM and Docker
+
+### 8. Project Structure & Cleanup
+
+* [ ] Replace the `hello-world` naming
+* [ ] Reorganize `lambda-api/sam-app/hello-world` into a cleaner structure
+* [ ] Review Lambda, service, repository, and model organization
+* [ ] Remove unnecessary duplication
+* [ ] Review configuration and environment variables
+* [ ] Update the README with the final local setup
 
 ## Local Development
 
