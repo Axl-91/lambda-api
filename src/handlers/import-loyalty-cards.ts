@@ -2,6 +2,7 @@ import { GetObjectCommand } from '@aws-sdk/client-s3';
 import { parse } from 'csv-parse/sync';
 import { S3Event } from 'aws-lambda';
 import { s3Client } from '../infrastructure/s3-client';
+import { LoyaltyCardImport } from '../models/loyalty-card-import';
 
 export const importLoyaltyCards = async (event: S3Event) => {
     const record = event.Records[0];
@@ -24,7 +25,7 @@ export const importLoyaltyCards = async (event: S3Event) => {
         throw new Error('CSV file is empty');
     }
 
-    const records = parse(content, {
+    const records: LoyaltyCardImport[] = parse(content, {
         columns: true,
         skip_empty_lines: true,
         trim: true,
