@@ -9,53 +9,27 @@ The entire application is developed and tested **locally** using SAM Local and D
 The project follows a simplified Clean Architecture approach:
 
 ```text
-API Gateway
-     │
-     ▼
-Lambda Handler
-     │
-     ▼
-  Service
-     │
-     ▼
- Repository
-     │
-     ▼
- DynamoDB
+API Gateway → Lambda Handler → Service → Repository → DynamoDB
 ```
 
 For the CSV import flow:
 
 ```text
-CSV
- │
- ▼
-S3
- │
- ▼
-Lambda
- │
- ▼
-SQS
- │
- ▼
-Lambda
- │
- ▼
-DynamoDB
+CSV → S3 → Lambda → SQS → Lambda → DynamoDB
 ```
 
 All AWS services are simulated locally for development and testing.
 
 ## API Endpoints
 
-| Method | Endpoint              | Description              | Status         |
-| ------ | --------------------- | ------------------------ | -------------- |
-| POST   | `/loyalty-cards`      | Create a loyalty card    | 🚧 In progress |
-| GET    | `/loyalty-cards/{id}` | Get a loyalty card by ID | 🚧 In progress |
-| GET    | `/loyalty-cards`      | Get all loyalty cards    | 🚧 In progress |
+| Method | Endpoint              | Description              | Status |
+| ------ | --------------------- | ------------------------ | ------ |
+| POST   | `/loyalty-cards`      | Create a loyalty card    | ✅ Done |
+| GET    | `/loyalty-cards/{id}` | Get a loyalty card by ID | ✅ Done |
+| GET    | `/loyalty-cards`      | Get all loyalty cards    | ✅ Done |
 
 ## Progress
+
 ### 1. Create Loyalty Card
 
 * [x] Create `POST /loyalty-cards` endpoint
@@ -98,6 +72,7 @@ All AWS services are simulated locally for development and testing.
 * [x] Keep database access inside repositories
 * [x] Define application/domain errors
 * [x] Map errors to appropriate HTTP status codes (`400`, `404`, `500`, etc.)
+* [x] Centralize service/repository dependency creation
 * [ ] Centralize HTTP error handling if it becomes repetitive
 
 ### 5. Testing
@@ -121,7 +96,7 @@ All AWS services are simulated locally for development and testing.
 * [ ] Process SQS messages
 * [ ] Reuse `LoyaltyCardService` to persist cards in DynamoDB
 * [ ] Handle failed messages and retries
-* [ ] Test the complete pipeline locally
+* [ ] Test the complete pipeline
 
 ```text
 CSV → S3 → Lambda → SQS → Lambda → DynamoDB
@@ -142,14 +117,29 @@ CSV → S3 → Lambda → SQS → Lambda → DynamoDB
 * [ ] Make the complete architecture runnable locally
 * [ ] Test the complete application locally with SAM and Docker
 
-### 8. Project Structure & Cleanup
+## Project Structure
 
-* [ ] Replace the `hello-world` naming
-* [ ] Reorganize `lambda-api/sam-app/hello-world` into a cleaner structure
-* [ ] Review Lambda, service, repository, and model organization
-* [ ] Remove unnecessary duplication
-* [ ] Review configuration and environment variables
-* [ ] Update the README with the final local setup
+```text
+lambda-api/
+├── src/
+│   ├── handlers/
+│   ├── services/
+│   ├── repositories/
+│   ├── models/
+│   ├── errors/
+│   └── infrastructure/
+│       └── dependencies.ts
+├── tests/
+├── events/
+├── template.yaml
+├── samconfig.toml
+├── tsconfig.json
+├── jest.config.ts
+├── package.json
+├── package-lock.json
+├── docker-compose.yml
+└── README.md
+```
 
 ## Local Development
 
