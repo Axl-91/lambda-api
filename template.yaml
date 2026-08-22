@@ -10,7 +10,6 @@ Globals:
     Timeout: 3
 
     Tracing: Active
-    # You can add LoggingConfig parameters such as the Logformat, Log Group, and SystemLogLevel or ApplicationLogLevel. Learn more here https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-function.html#sam-function-loggingconfig.
     LoggingConfig:
       LogFormat: JSON
   Api:
@@ -108,6 +107,25 @@ Resources:
         Sourcemap: true
         EntryPoints:
         - src/handlers/create-loyalty-card.ts
+  ImportLoyaltyCardsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: src/handlers/import-loyalty-cards.importLoyaltyCards
+      Runtime: nodejs22.x
+      Environment:
+        Variables:
+          S3_ENDPOINT: http://minio:9000
+          AWS_ACCESS_KEY_ID: dummy
+          AWS_SECRET_ACCESS_KEY: dummy123
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: true
+        Target: es2020
+        Sourcemap: true
+        EntryPoints:
+          - src/handlers/import-loyalty-cards.ts
 
   ApplicationResourceGroup:
     Type: AWS::ResourceGroups::Group
