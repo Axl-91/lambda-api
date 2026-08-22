@@ -1,11 +1,10 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  sam-app
+  lambda-api
 
-  Sample SAM Template for sam-app
+  Sample SAM for lambda API
 
-# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
     Timeout: 3
@@ -31,8 +30,8 @@ Resources:
   GetLoyaltyCardsFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: hello-world/
-      Handler: app.getLoyaltyCards
+      CodeUri: .
+      Handler: src/handlers/get-loyalty-cards.getLoyaltyCards
       Runtime: nodejs22.x
       Policies:
         - DynamoDBCrudPolicy:
@@ -54,12 +53,12 @@ Resources:
         Target: es2020
         Sourcemap: true
         EntryPoints:
-        - app.ts
+        - src/handlers/get-loyalty-cards.ts
   GetLoyaltyCardFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: hello-world/
-      Handler: app.getLoyaltyCard
+      CodeUri: .
+      Handler: src/handlers/get-loyalty-card.getLoyaltyCard
       Runtime: nodejs22.x
       Policies:
         - DynamoDBCrudPolicy:
@@ -81,12 +80,12 @@ Resources:
         Target: es2020
         Sourcemap: true
         EntryPoints:
-        - app.ts
+        - src/handlers/get-loyalty-card.ts
   CreateLoyaltyCardFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: hello-world/
-      Handler: app.createLoyaltyCard 
+      CodeUri: .
+      Handler: src/handlers/create-loyalty-card.createLoyaltyCard
       Runtime: nodejs22.x
       Policies:
         - DynamoDBCrudPolicy:
@@ -108,7 +107,7 @@ Resources:
         Target: es2020
         Sourcemap: true
         EntryPoints:
-        - app.ts
+        - src/handlers/create-loyalty-card.ts
 
   ApplicationResourceGroup:
     Type: AWS::ResourceGroups::Group

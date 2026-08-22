@@ -1,30 +1,39 @@
 {
-  "name": "loyalty-api",
+  "name": "lambda-api",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Local lambda API",
+  "main": "app.js",
+  "author": "SAM CLI",
+  "license": "MIT",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "unit": "jest",
+    "lint": "eslint '*.ts' --quiet --fix",
+    "compile": "tsc",
+    "test": "npm run compile && npm run unit"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "module",
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.1111.0",
-    "@aws-sdk/lib-dynamodb": "^3.1111.0",
-    "dotenv": "^17.4.2",
-    "express": "^5.2.1",
-    "uuid": "^14.0.1"
+    "@aws-sdk/client-dynamodb": "^3.1116.0",
+    "@aws-sdk/lib-dynamodb": "^3.1116.0",
+    "esbuild": "^0.28.2",
+    "uuid": "^14.0.2"
   },
   "devDependencies": {
     "@jest/globals": "^30.4.1",
-    "@types/aws-lambda": "^8.10.162",
-    "@types/express": "^5.0.6",
+    "@types/aws-lambda": "^8.10.92",
     "@types/jest": "^30.0.0",
-    "@types/mocha": "^10.0.10",
-    "@types/node": "^26.2.0",
-    "ts-node-dev": "^2.0.0",
-    "typescript": "^7.0.2"
+    "@types/node": "^20.19.43",
+    "@typescript-eslint/eslint-plugin": "^8.67.0",
+    "@typescript-eslint/parser": "^8.67.0",
+    "eslint": "^10.9.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.6",
+    "jest": "^30.4.2",
+    "prettier": "^3.9.6",
+    "ts-jest": "^29.4.12",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.5"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true
   }
 }

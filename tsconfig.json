@@ -1,13 +1,20 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
+    "target": "es2020",
+    "module": "commonjs",
     "moduleResolution": "node",
-    "outDir": "./dist",
-    "rootDir": "./sam-app",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true
-  }
+    "sourceMap": false,
+    "noEmit": true,
+    "types": [
+      "node",
+      "jest"
+    ]
+  },
+  "exclude": [
+    "node_modules"
+  ]
 }
