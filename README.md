@@ -108,12 +108,13 @@ CSV → S3 → Lambda → SQS → Lambda → DynamoDB
 * [x] Configure DynamoDB
 * [x] Configure Lambda permissions / IAM
 * [x] Configure Lambda environment variables
-* [x] Configure Docker network for local AWS services
+* [x] Configure shared Docker network (`lambda-api`)
+* [x] Configure persistent DynamoDB volume
+* [x] Automate DynamoDB table creation
+* [x] Configure SAM to use the shared Docker network
 * [ ] Configure S3
 * [ ] Configure SQS
 * [ ] Configure all required AWS resources in `template.yaml`
-* [ ] Automate DynamoDB table creation
-* [ ] Persist DynamoDB Local data across container restarts
 * [ ] Make the complete architecture runnable locally
 * [ ] Test the complete application locally with SAM and Docker
 
@@ -138,30 +139,81 @@ lambda-api/
 ├── package.json
 ├── package-lock.json
 ├── docker-compose.yml
+├── docker/
+│   └── dynamodb/
+│       └── init.sh
 └── README.md
 ```
 
 ## Local Development
 
-Build the SAM application:
+The local environment uses **Docker Compose for AWS infrastructure** and **AWS SAM Local for the Lambda/API layer**.
+
+### 1. Start local AWS infrastructure
+
+Start DynamoDB Local and automatically initialize the `LoyaltyCards` table:
+
+```bash
+docker compose up
+```
+
+This starts:
+
+* DynamoDB Local
+* DynamoDB initialization container
+* Persistent DynamoDB storage
+
+The DynamoDB container is connected to the shared Docker network:
+
+```text
+lambda-api
+```
+
+The `dynamodb-init` container automatically creates the `LoyaltyCards` table if it does not already exist.
+
+DynamoDB Local is available from the host at:
+
+```text
+http://localhost:8000
+```
+
+Inside the Docker network, Lambda containers access it through:
+
+```text
+http://dynamodb:8000
+```
+
+### 2. Build the SAM application
+
+In another terminal:
 
 ```bash
 sam build
 ```
 
-Start the local API:
+### 3. Start the local API with SAM
+
+Start SAM Local using the same Docker network as DynamoDB:
 
 ```bash
-sam local start-api
+sam local start-api --docker-network lambda-api
 ```
 
-The API will be available at:
+This is important because the Lambda containers created by SAM need to communicate with DynamoDB using the Docker hostname:
+
+```text
+dynamodb:8000
+```
+
+The local API will be available at:
 
 ```text
 http://localhost:3000
 ```
 
-Example:
+### 4. Test the API
+
+Create a loyalty card:
 
 ```bash
 curl -X POST http://localhost:3000/loyalty-cards \
@@ -169,46 +221,23 @@ curl -X POST http://localhost:3000/loyalty-cards \
   -d '{"customerName":"Axel"}'
 ```
 
-Run tests:
+Get a loyalty card by ID:
+
+```bash
+curl http://localhost:3000/loyalty-cards/{id}
+```
+
+Get all loyalty cards:
+
+```bash
+curl http://localhost:3000/loyalty-cards
+```
+
+### 5. Run tests
 
 ```bash
 npm test
 ```
-
-## Loyalty Card Model
-
-```typescript
-interface LoyaltyCard {
-    id: string;
-    customerName: string;
-    points: number;
-    createdAt: string;
-}
-```
-
-A newly created loyalty card looks like:
-
-```json
-{
-    "id": "8f7c0c8e-8e5b-4a8d-9f6a-2f8e3e6d5c21",
-    "customerName": "Axel",
-    "points": 0,
-    "createdAt": "2026-08-21T23:20:00.000Z"
-}
-```
-
-## Tech Stack
-
-* **Node.js**
-* **TypeScript**
-* **AWS Lambda**
-* **Amazon API Gateway**
-* **Amazon DynamoDB**
-* **Amazon S3**
-* **Amazon SQS**
-* **AWS SAM**
-* **Docker**
-* **Jest**
 
 ## Project Goal
 
