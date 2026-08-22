@@ -1,12 +1,38 @@
 services:
   dynamodb:
     image: amazon/dynamodb-local
+    user: root
     ports:
       - "8000:8000"
-    command: "-jar DynamoDBLocal.jar -sharedDb"
+    command: >
+      -jar DynamoDBLocal.jar
+      -sharedDb
+      -dbPath /home/dynamodblocal/data
+    volumes:
+      - dynamodb-data:/home/dynamodblocal/data
     networks:
       - lambda-api
 
+  dynamodb-init:
+    image: amazon/aws-cli
+    depends_on:
+      - dynamodb
+    environment:
+      AWS_ACCESS_KEY_ID: dummy
+      AWS_SECRET_ACCESS_KEY: dummy
+      AWS_DEFAULT_REGION: us-east-1
+    volumes:
+      - ./docker/dynamodb/init.sh:/init.sh:ro
+    networks:
+      - lambda-api
+    entrypoint:
+      - /bin/sh
+      - /init.sh
+
 networks:
   lambda-api:
+    external: true
     name: lambda-api
+
+volumes:
+  dynamodb-data:
