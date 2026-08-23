@@ -34,9 +34,13 @@ describe('LoyaltyCardService', () => {
 
             expect(storedCard).toEqual(result);
         });
+
+        it('should return error when customerName is empty', async () => {
+            await expect(service.create('')).rejects.toThrow(Error('customerName is required'));
+        });
     });
 
-    describe('get', () => {
+    describe('getById', () => {
         it('should return a loyalty card by id', async () => {
             const createdCard = await service.create('Axel');
 
@@ -49,6 +53,10 @@ describe('LoyaltyCardService', () => {
             await expect(service.getById('non-existent-id')).rejects.toThrow(
                 LoyaltyCardNotFoundError,
             );
+        });
+
+        it('should return error when id is empty', async () => {
+            await expect(service.getById('')).rejects.toThrow(Error('id is required'));
         });
     });
 
