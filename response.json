@@ -1,0 +1,1 @@
+{"statusCode": 200, "body": "{\"message\":\"CSV parsed successfully\",\"records\":[{\"customerName\":\"Axel\"},{\"customerName\":\"Juan\"},{\"customerName\":\"Maria\"}]}"}

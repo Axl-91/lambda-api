@@ -10,10 +10,12 @@
     "sam": "npm run build && sam local start-api --docker-network lambda-api",
     "lint": "eslint '*.ts' --quiet --fix",
     "compile": "tsc",
-    "test": "npm run compile && jest"
+    "test": "npm run compile && jest",
+    "local:s3-bridge": "tsx src/local/s3-event-bridge/index.ts"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.1116.0",
+    "@aws-sdk/client-lambda": "^3.1116.0",
     "@aws-sdk/client-s3": "^3.1116.0",
     "@aws-sdk/lib-dynamodb": "^3.1116.0",
     "csv-parse": "^7.0.2",
