@@ -114,28 +114,26 @@ The current S3 flow uses a small local bridge because MinIO cannot directly invo
 ```text
 lambda-api/
 ├── src/
-│   ├── handlers/
-│   ├── services/
-│   ├── repositories/
-│   ├── models/
-│   ├── errors/
-│   └── infrastructure/
-│       └── dependencies.ts
-├── tests/
-├── events/
+│   ├── handlers/          # Lambda handlers
+│   ├── services/          # Business logic
+│   ├── repositories/      # Data access
+│   ├── models/            # Domain models
+│   ├── errors/            # Application/domain errors
+│   ├── infrastructure/    # AWS clients & dependencies
+│   ├── local/             # Local development utilities
+│   └── tests/             # Unit tests & test doubles
+│
 ├── docker/
-│   ├── dynamodb/
-│   │   └── init.sh
-│   └── s3/
-│       └── init.sh
-├── template.yaml
-├── samconfig.toml
-├── tsconfig.json
-├── jest.config.ts
-├── package.json
-├── docker-compose.yml
-└── README.md
+│   ├── dynamodb/          # DynamoDB initialization
+│   └── s3/                # S3/MinIO initialization
+│
+├── events/                # Local test events & CSV files
+├── template.yaml          # AWS SAM infrastructure
+├── docker-compose.yml     # Local AWS infrastructure
+├── jest.config.ts         # Jest configuration
+└── package.json
 ```
+
 
 ---
 
