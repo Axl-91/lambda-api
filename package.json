@@ -11,7 +11,8 @@
     "lint": "eslint '*.ts' --quiet --fix",
     "compile": "tsc",
     "test": "npm run compile && jest",
-    "local:s3-bridge": "tsx src/local/s3-event-bridge/index.ts"
+    "local:s3-bridge": "tsx src/local/s3-event-bridge/index.ts",
+    "local:sqs-consumer": "tsx src/local/sqs-consumer/index.ts"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.1116.0",
