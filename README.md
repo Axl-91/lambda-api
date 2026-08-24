@@ -2,7 +2,9 @@
 
 Serverless REST API built with **AWS Lambda**, **API Gateway**, **DynamoDB**, **S3** and **SQS**, using **Node.js + TypeScript** and **AWS SAM**.
 
-The entire application is developed and tested **locally** using Docker, SAM Local, DynamoDB Local and MinIO. No AWS deployment is required.
+The entire application is developed and tested locally using Docker, SAM Local, DynamoDB Local, MinIO and ElasticMQ. 
+
+No AWS deployment is required.
 
 ## Architecture
 
