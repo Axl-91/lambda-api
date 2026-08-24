@@ -1,8 +1,6 @@
-import {
-    DeleteMessageCommand,
-    ReceiveMessageCommand,
-    SQSClient,
-} from '@aws-sdk/client-sqs';
+import { DeleteMessageCommand, ReceiveMessageCommand, SQSClient } from '@aws-sdk/client-sqs';
+import { LambdaInvoker } from '../../infrastructure/lambda/lambda-invoker';
+import { LoyaltyCardImport } from '../../models/loyalty-card-import';
 
 const sqs = new SQSClient({
     endpoint: process.env.SQS_ENDPOINT ?? 'http://localhost:9324',
@@ -13,14 +11,13 @@ const sqs = new SQSClient({
     },
 });
 
-const queueUrl =
-    process.env.SQS_QUEUE_URL ??
-    'http://localhost:9324/000000000000/loyalty-cards';
+const queueUrl = process.env.SQS_QUEUE_URL ?? 'http://localhost:9324/000000000000/loyalty-cards';
 
-const lambdaEndpoint =
-    process.env.SAM_LAMBDA_ENDPOINT ?? 'http://localhost:3001';
+const lambdaEndpoint = process.env.SAM_LAMBDA_ENDPOINT ?? 'http://localhost:3001';
 
 const functionName = 'ProcessLoyaltyCardFunction';
+
+const lambdaInvoker = new LambdaInvoker(lambdaEndpoint);
 
 const poll = async () => {
     const result = await sqs.send(
@@ -41,30 +38,8 @@ const poll = async () => {
         }
 
         try {
-            const response = await fetch(
-                `${lambdaEndpoint}/2015-03-31/functions/${functionName}/invocations`,
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        Records: [
-                            {
-                                messageId: message.MessageId,
-                                receiptHandle: message.ReceiptHandle,
-                                body: message.Body,
-                            },
-                        ],
-                    }),
-                },
-            );
-
-            if (!response.ok) {
-                throw new Error(
-                    `Lambda invocation failed with status ${response.status}`,
-                );
-            }
+            const payload: LoyaltyCardImport = JSON.parse(message.Body);
+            await lambdaInvoker.invoke(functionName, payload);
 
             await sqs.send(
                 new DeleteMessageCommand({

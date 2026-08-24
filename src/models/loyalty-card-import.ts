@@ -1,3 +1,3 @@
 export interface LoyaltyCardImport {
-    username: string;
+    customerName: string;
 }
