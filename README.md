@@ -345,7 +345,7 @@ Unit tests use `FakeLoyaltyCardRepository` to test service logic without requiri
 
 ## Local Architecture
 
-<img width="1376" height="768" alt="lambda-api-flow" src="https://github.com/user-attachments/assets/093e7bcd-61ab-4f8d-896e-aeda62615ba2" />
+<img width="1408" height="768" alt="lambda-api-flow" src="https://github.com/user-attachments/assets/72e13e92-4a10-4e35-9a2e-467ab9ba7857" />
 
 ---
 
