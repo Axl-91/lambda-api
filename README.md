@@ -82,7 +82,7 @@ The current S3 flow uses a small local bridge because MinIO cannot directly invo
 * [x] S3 ObjectCreated events
 * [x] S3 Event Bridge
 * [x] MinIO → Bridge → SAM Local
-* [ ] SQS
+* [x] SQS
 * [ ] SQS-triggered Lambda
 * [ ] Persist imported cards through LoyaltyCardService
 * [ ] Retries and failed messages
@@ -101,7 +101,7 @@ The current S3 flow uses a small local bridge because MinIO cannot directly invo
 * [x] Automatic S3 bucket creation
 * [x] SAM Lambda network configuration
 * [x] Local S3 event bridge
-* [ ] SQS
+* [x] SQS
 * [ ] SQS → Lambda event source
 * [ ] DLQ
 * [ ] Complete infrastructure in `template.yaml`
