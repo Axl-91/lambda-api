@@ -17,10 +17,12 @@ API Gateway → Lambda Handler → Service → Repository → DynamoDB
 CSV import pipeline:
 
 ```text
-CSV → S3 → Lambda → SQS → Lambda → DynamoDB
+CSV → MinIO (S3) → S3 Event Bridge → Lambda → ElasticMQ (SQS) → SQS Consumer → Lambda → DynamoDB
 ```
 
 The current S3 flow uses a small local bridge because MinIO cannot directly invoke SAM Local Lambda endpoints.
+
+The local SQS flow uses a small consumer because ElasticMQ cannot directly trigger SAM Local Lambda endpoints.
 
 ---
 
