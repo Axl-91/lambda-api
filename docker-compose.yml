@@ -48,7 +48,9 @@ services:
       - lambda-api
 
   s3-init:
-    image: amazon/aws-cli
+    build:
+      context: ./docker/s3
+      dockerfile: Dockerfile
     depends_on:
       - minio
     environment:

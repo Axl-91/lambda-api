@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 echo "Waiting for MinIO..."
 
 until aws s3api list-buckets \
@@ -27,6 +29,22 @@ else
     --region us-east-1
 
   echo "Bucket loyalty-cards created."
+fi
+
+echo "Configuring MinIO client..."
+
+mc alias set local http://minio:9000 dummy dummy123
+
+echo "Configuring S3BRIDGE webhook..."
+
+if mc event list local/loyalty-cards | grep -q "arn:minio:sqs::S3BRIDGE:webhook"; then
+    echo "S3BRIDGE webhook already configured."
+else
+    mc event add local/loyalty-cards \
+        arn:minio:sqs::S3BRIDGE:webhook \
+        --event put
+
+    echo "S3BRIDGE webhook configured."
 fi
 
 echo "S3 initialization complete."
