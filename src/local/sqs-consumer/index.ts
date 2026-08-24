@@ -1,15 +1,12 @@
+import { InvokeCommand, LambdaClient } from '@aws-sdk/client-lambda';
 import { DeleteMessageCommand, ReceiveMessageCommand, SQSClient } from '@aws-sdk/client-sqs';
-import { LambdaInvoker } from '../../infrastructure/lambda/lambda-invoker';
-import { LoyaltyCardImport } from '../../models/loyalty-card-import';
 
-const sqs = new SQSClient({
-    endpoint: process.env.SQS_ENDPOINT ?? 'http://localhost:9324',
-    region: process.env.AWS_REGION ?? 'us-east-1',
-    credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID ?? 'dummy',
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY ?? 'dummy123',
-    },
-});
+const region = process.env.AWS_REGION ?? 'us-east-1';
+
+const credentials = {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID ?? 'dummy',
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY ?? 'dummy123',
+};
 
 const queueUrl = process.env.SQS_QUEUE_URL ?? 'http://localhost:9324/000000000000/loyalty-cards';
 
@@ -17,7 +14,17 @@ const lambdaEndpoint = process.env.SAM_LAMBDA_ENDPOINT ?? 'http://localhost:3001
 
 const functionName = 'ProcessLoyaltyCardFunction';
 
-const lambdaInvoker = new LambdaInvoker(lambdaEndpoint);
+const sqs = new SQSClient({
+    endpoint: process.env.SQS_ENDPOINT ?? 'http://localhost:9324',
+    region,
+    credentials,
+});
+
+const lambda = new LambdaClient({
+    endpoint: lambdaEndpoint,
+    region,
+    credentials,
+});
 
 const poll = async () => {
     const result = await sqs.send(
@@ -38,8 +45,12 @@ const poll = async () => {
         }
 
         try {
-            const payload: LoyaltyCardImport = JSON.parse(message.Body);
-            await lambdaInvoker.invoke(functionName, payload);
+            await lambda.send(
+                new InvokeCommand({
+                    FunctionName: functionName,
+                    Payload: Buffer.from(message.Body),
+                }),
+            );
 
             await sqs.send(
                 new DeleteMessageCommand({
