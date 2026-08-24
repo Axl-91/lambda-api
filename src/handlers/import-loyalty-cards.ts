@@ -3,6 +3,7 @@ import { parse } from 'csv-parse/sync';
 import { S3Event } from 'aws-lambda';
 import { s3Client } from '../infrastructure/s3-client';
 import { LoyaltyCardImport } from '../models/loyalty-card-import';
+import { sendMessage } from '../infrastructure/sqs-client';
 
 export const importLoyaltyCards = async (event: S3Event) => {
     const record = event.Records[0];
@@ -25,19 +26,23 @@ export const importLoyaltyCards = async (event: S3Event) => {
         throw new Error('CSV file is empty');
     }
 
-    const records: LoyaltyCardImport[] = parse(content, {
+    const cards: LoyaltyCardImport[] = parse(content, {
         columns: true,
         skip_empty_lines: true,
         trim: true,
     });
 
-    console.log('Parsed CSV:', records);
+    console.log('Parsed CSV:', cards);
+
+    for (const card of cards) {
+        await sendMessage(card);
+    }
 
     return {
         statusCode: 200,
         body: JSON.stringify({
-            message: 'CSV parsed successfully',
-            records,
+            message: 'CSV imported successfully',
+            cards,
         }),
     };
 };

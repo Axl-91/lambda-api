@@ -3,7 +3,7 @@ import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
 
 const lambda = new LambdaClient({
     region: 'us-east-1',
-    endpoint: 'http://localhost:3001',
+    endpoint: 'http://127.0.0.1:3001',
 });
 
 const server = http.createServer((req, res) => {
