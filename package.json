@@ -21,6 +21,7 @@
     "@aws-sdk/client-sqs": "^3.1116.0",
     "@aws-sdk/lib-dynamodb": "^3.1116.0",
     "csv-parse": "^7.0.2",
+    "dotenv": "^17.4.2",
     "esbuild": "^0.28.2",
     "uuid": "^14.0.2"
   },

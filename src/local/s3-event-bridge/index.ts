@@ -1,9 +1,13 @@
 import http from 'node:http';
 import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
+import 'dotenv/config';
+
+const region = process.env.AWS_REGION ?? 'us-east-1';
+const endpoint = process.env.SAM_LAMBDA_ENDPOINT ?? 'http://127.0.0.1:3001';
 
 const lambda = new LambdaClient({
-    region: 'us-east-1',
-    endpoint: 'http://127.0.0.1:3001',
+    region,
+    endpoint,
 });
 
 const server = http.createServer((req, res) => {

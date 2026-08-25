@@ -44,11 +44,21 @@ const poll = async () => {
             continue;
         }
 
+        const recordMsg = JSON.stringify({
+            Records: [
+                {
+                    messageId: message.MessageId,
+                    receiptHandle: message.ReceiptHandle,
+                    body: message.Body,
+                },
+            ],
+        });
+
         try {
             await lambda.send(
                 new InvokeCommand({
                     FunctionName: functionName,
-                    Payload: Buffer.from(message.Body),
+                    Payload: Buffer.from(recordMsg),
                 }),
             );
 
