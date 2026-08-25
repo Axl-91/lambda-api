@@ -7,7 +7,6 @@ export const getLoyaltyCard = async (
 ): Promise<APIGatewayProxyResult> => {
     try {
         const id = event.pathParameters?.id;
-        console.log(`El id es ${id}`);
 
         const loyaltyCard = await loyaltyCardService.getById(id ?? '');
 
