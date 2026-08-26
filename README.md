@@ -89,7 +89,7 @@ The local SQS flow uses a small consumer because ElasticMQ cannot directly trigg
 * [x] SQS
 * [x] SQS-triggered Lambda
 * [x] Persist imported cards through LoyaltyCardService
-* [ ] Retries and failed messages
+* [x] Retries and failed messages
 * [ ] Dead Letter Queue
 * [x] End-to-end pipeline test
 
@@ -107,7 +107,7 @@ The local SQS flow uses a small consumer because ElasticMQ cannot directly trigg
 * [x] Local S3 event bridge
 * [x] SQS
 * [x] SQS → Lambda consumer
-* [ ] DLQ
+* [x] DLQ
 * [ ] Complete infrastructure in `template.yaml`
 * [ ] One-command local setup
 
