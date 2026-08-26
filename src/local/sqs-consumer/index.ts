@@ -55,12 +55,16 @@ const poll = async () => {
         });
 
         try {
-            await lambda.send(
+            const result = await lambda.send(
                 new InvokeCommand({
                     FunctionName: functionName,
                     Payload: Buffer.from(recordMsg),
                 }),
             );
+
+            if (result.FunctionError) {
+                throw new Error(`Lambda execution failed: ${result.FunctionError}`);
+            }
 
             await sqs.send(
                 new DeleteMessageCommand({
