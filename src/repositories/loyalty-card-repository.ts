@@ -11,7 +11,10 @@ const client = new DynamoDBClient({
 const dynamoDb = DynamoDBDocumentClient.from(client);
 
 export class LoyaltyCardRepository implements ILoyaltyCardRepository {
-    constructor(private readonly tableName: string) {}
+    constructor(
+        private readonly tableName: string,
+        private readonly db: DynamoDBDocumentClient = dynamoDb,
+    ) {}
 
     private mapToLoyaltyCard(item: Record<string, unknown>): LoyaltyCard {
         return {
@@ -23,7 +26,7 @@ export class LoyaltyCardRepository implements ILoyaltyCardRepository {
     }
 
     async create(loyaltyCard: LoyaltyCard): Promise<void> {
-        await dynamoDb.send(
+        await this.db.send(
             new PutCommand({
                 TableName: this.tableName,
                 Item: loyaltyCard,
@@ -32,7 +35,7 @@ export class LoyaltyCardRepository implements ILoyaltyCardRepository {
     }
 
     async getById(id: string): Promise<LoyaltyCard | undefined> {
-        const result = await dynamoDb.send(
+        const result = await this.db.send(
             new GetCommand({
                 TableName: this.tableName,
                 Key: { id },
@@ -43,7 +46,7 @@ export class LoyaltyCardRepository implements ILoyaltyCardRepository {
     }
 
     async getAll(): Promise<LoyaltyCard[]> {
-        const result = await dynamoDb.send(
+        const result = await this.db.send(
             new ScanCommand({
                 TableName: this.tableName,
             }),
