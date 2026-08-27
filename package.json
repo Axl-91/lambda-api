@@ -11,6 +11,7 @@
     "lint": "eslint '*.ts' --quiet --fix",
     "compile": "tsc",
     "test": "npm run compile && jest",
+    "local:upload-csv": "tsx src/local/upload-csv.ts",
     "local:s3-bridge": "tsx src/local/s3-event-bridge/index.ts",
     "local:sqs-consumer": "tsx src/local/sqs-consumer/index.ts"
   },
