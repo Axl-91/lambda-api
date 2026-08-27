@@ -108,7 +108,7 @@ The local SQS flow uses a small consumer because ElasticMQ cannot directly trigg
 * [x] SQS
 * [x] SQS → Lambda consumer
 * [x] DLQ
-* [ ] Complete infrastructure in `template.yaml`
+* [x] Complete infrastructure in `template.yaml`
 * [ ] One-command local setup
 
 ---
