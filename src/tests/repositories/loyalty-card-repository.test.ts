@@ -9,9 +9,9 @@ describe('LoyaltyCardRepository', () => {
     beforeEach(() => {
         jest.clearAllMocks();
 
-        repository = new LoyaltyCardRepository('LoyaltyCards', {
-            send: sendMock,
-        } as any);
+        const dbMock = { send: sendMock };
+
+        repository = new LoyaltyCardRepository('LoyaltyCards', dbMock);
     });
 
     describe('create', () => {

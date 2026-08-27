@@ -10,10 +10,14 @@ const client = new DynamoDBClient({
 
 const dynamoDb = DynamoDBDocumentClient.from(client);
 
+interface DynamoDb {
+    send: DynamoDBDocumentClient['send'];
+}
+
 export class LoyaltyCardRepository implements ILoyaltyCardRepository {
     constructor(
         private readonly tableName: string,
-        private readonly db: DynamoDBDocumentClient = dynamoDb,
+        private readonly db: DynamoDb = dynamoDb,
     ) {}
 
     private mapToLoyaltyCard(item: Record<string, unknown>): LoyaltyCard {
