@@ -38,27 +38,21 @@ The local SQS flow uses a small consumer because ElasticMQ cannot directly trigg
 
 ## Progress
 
-### Create Loyalty Card
+### Lambda Functions & REST API
 
 * [x] POST `/loyalty-cards`
-* [x] LoyaltyCard model
-* [x] LoyaltyCardService
+* [x] GET `/loyalty-cards/{id}`
+* [x] GET `/loyalty-cards`
 * [x] Input validation
-* [x] UUID generation
-* [x] Initial points
-* [x] Creation timestamp
-* [x] DynamoDB persistence
+* [x] Error handling
 
 ### DynamoDB & Repository
 
 * [x] DynamoDB Local
-* [x] Loyalty cards table
 * [x] LoyaltyCardRepository
 * [x] Create / Get / GetAll operations
 * [x] Service → Repository → DynamoDB
-* [x] Environment configuration
-* [x] Lambda permissions
-* [x] DynamoDB item mapping
+* [x] AWS configuration and permissions
 
 ### Architecture & Error Handling
 
@@ -70,13 +64,15 @@ The local SQS flow uses a small consumer because ElasticMQ cannot directly trigg
 
 ### Testing
 
-* [x] Jest
-* [x] Handler tests
+* [x] Configure Jest
+* [x] Handler unit tests
 * [x] Service unit tests
-* [x] FakeLoyaltyCardRepository
+* [x] Repository unit tests
+* [x] Test factories and fakes
+* [x] Validation and error tests
 * [ ] Repository integration tests
-* [ ] Additional validation/error tests
 * [ ] Integration tests
+* [ ] End-to-end tests
 
 ### CSV Import
 
