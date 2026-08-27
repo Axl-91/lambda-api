@@ -1,5 +1,6 @@
 import { PutCommand } from '@aws-sdk/lib-dynamodb';
 import { LoyaltyCardRepository } from '../../repositories/loyalty-card-repository';
+import { createLoyaltyCardFixture } from '../factories/loyalty-card-factory';
 
 describe('LoyaltyCardRepository', () => {
     const sendMock = jest.fn();
@@ -16,12 +17,7 @@ describe('LoyaltyCardRepository', () => {
 
     describe('create', () => {
         it('should create a loyalty card', async () => {
-            const loyaltyCard = {
-                id: '123',
-                customerName: 'Axel',
-                points: 0,
-                createdAt: '2026-08-27T00:00:00.000Z',
-            };
+            const loyaltyCard = createLoyaltyCardFixture();
 
             sendMock.mockResolvedValue({});
 
@@ -30,16 +26,21 @@ describe('LoyaltyCardRepository', () => {
             expect(sendMock).toHaveBeenCalledTimes(1);
             expect(sendMock).toHaveBeenCalledWith(expect.any(PutCommand));
         });
+
+        it('should propagate DynamoDB errors', async () => {
+            const error = new Error('DynamoDB error');
+
+            sendMock.mockRejectedValue(error);
+
+            const loyaltyCard = createLoyaltyCardFixture();
+
+            await expect(repository.create(loyaltyCard)).rejects.toThrow('DynamoDB error');
+        });
     });
 
     describe('getById', () => {
         it('should return a loyalty card when it exists', async () => {
-            const loyaltyCard = {
-                id: '123',
-                customerName: 'Axel',
-                points: 100,
-                createdAt: '2026-08-27T00:00:00.000Z',
-            };
+            const loyaltyCard = createLoyaltyCardFixture();
 
             sendMock.mockResolvedValue({
                 Item: loyaltyCard,
@@ -61,24 +62,19 @@ describe('LoyaltyCardRepository', () => {
             expect(sendMock).toHaveBeenCalledTimes(1);
             expect(result).toBeUndefined();
         });
+
+        it('should propagate DynamoDB errors', async () => {
+            const error = new Error('DynamoDB error');
+
+            sendMock.mockRejectedValue(error);
+
+            await expect(repository.getById('123')).rejects.toThrow('DynamoDB error');
+        });
     });
 
     describe('getAll', () => {
         it('should return all loyalty cards', async () => {
-            const loyaltyCards = [
-                {
-                    id: '123',
-                    customerName: 'Axel',
-                    points: 100,
-                    createdAt: '2026-08-27T00:00:00.000Z',
-                },
-                {
-                    id: '456',
-                    customerName: 'Juan',
-                    points: 50,
-                    createdAt: '2026-08-27T01:00:00.000Z',
-                },
-            ];
+            const loyaltyCards = [createLoyaltyCardFixture(), createLoyaltyCardFixture()];
 
             sendMock.mockResolvedValue({
                 Items: loyaltyCards,
@@ -99,6 +95,14 @@ describe('LoyaltyCardRepository', () => {
 
             expect(sendMock).toHaveBeenCalledTimes(1);
             expect(result).toEqual([]);
+        });
+
+        it('should propagate DynamoDB errors', async () => {
+            const error = new Error('DynamoDB error');
+
+            sendMock.mockRejectedValue(error);
+
+            await expect(repository.getAll()).rejects.toThrow('DynamoDB error');
         });
     });
 });
