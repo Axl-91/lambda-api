@@ -1,19 +1,13 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  lambda-api
-
-  Sample SAM for lambda API
+  Loyalty cards API and CSV import pipeline.
 
 Globals:
   Function:
+    Runtime: nodejs22.x
     Timeout: 3
 
-    Tracing: Active
-    LoggingConfig:
-      LogFormat: JSON
-  Api:
-    TracingEnabled: true
 Resources:
   LoyaltyCardsTable:
     Type: AWS::DynamoDB::Table
@@ -26,12 +20,12 @@ Resources:
       KeySchema:
         - AttributeName: id
           KeyType: HASH
+
   GetLoyaltyCardsFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: .
       Handler: src/handlers/get-loyalty-cards.getLoyaltyCards
-      Runtime: nodejs22.x
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref LoyaltyCardsTable
@@ -40,25 +34,25 @@ Resources:
           LOYALTY_CARDS_TABLE: LoyaltyCards
           DYNAMODB_ENDPOINT: http://dynamodb:8000
       Events:
-        GetLoyaltyCard:
+        GetLoyaltyCards:
           Type: Api
           Properties:
             Path: /loyalty-cards
             Method: get
-    Metadata: # Manage esbuild properties
+    Metadata:
       BuildMethod: esbuild
       BuildProperties:
         Minify: true
         Target: es2020
         Sourcemap: true
         EntryPoints:
-        - src/handlers/get-loyalty-cards.ts
+          - src/handlers/get-loyalty-cards.ts
+
   GetLoyaltyCardFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: .
       Handler: src/handlers/get-loyalty-card.getLoyaltyCard
-      Runtime: nodejs22.x
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref LoyaltyCardsTable
@@ -72,20 +66,20 @@ Resources:
           Properties:
             Path: /loyalty-cards/{id}
             Method: get
-    Metadata: # Manage esbuild properties
+    Metadata:
       BuildMethod: esbuild
       BuildProperties:
         Minify: true
         Target: es2020
         Sourcemap: true
         EntryPoints:
-        - src/handlers/get-loyalty-card.ts
+          - src/handlers/get-loyalty-card.ts
+
   CreateLoyaltyCardFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: .
       Handler: src/handlers/create-loyalty-card.createLoyaltyCard
-      Runtime: nodejs22.x
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref LoyaltyCardsTable
@@ -99,28 +93,25 @@ Resources:
           Properties:
             Path: /loyalty-cards
             Method: post
-    Metadata: # Manage esbuild properties
+    Metadata:
       BuildMethod: esbuild
       BuildProperties:
         Minify: true
         Target: es2020
         Sourcemap: true
         EntryPoints:
-        - src/handlers/create-loyalty-card.ts
+          - src/handlers/create-loyalty-card.ts
+
   ImportLoyaltyCardsFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: .
       Handler: src/handlers/import-loyalty-cards.importLoyaltyCards
-      Runtime: nodejs22.x
       Environment:
         Variables:
           S3_ENDPOINT: http://minio:9000
           SQS_ENDPOINT: http://elasticmq:9324
           SQS_QUEUE_URL: http://elasticmq:9324/000000000000/loyalty-cards
-          AWS_ACCESS_KEY_ID: dummy
-          AWS_SECRET_ACCESS_KEY: dummy123
-          AWS_REGION: us-east-1
     Metadata:
       BuildMethod: esbuild
       BuildProperties:
@@ -129,19 +120,19 @@ Resources:
         Sourcemap: true
         EntryPoints:
           - src/handlers/import-loyalty-cards.ts
+
   ProcessLoyaltyCardFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: .
       Handler: src/handlers/process-loyalty-card.processLoyaltyCard
-      Runtime: nodejs22.x
       Environment:
         Variables:
           DYNAMODB_ENDPOINT: http://dynamodb:8000
           LOYALTY_CARDS_TABLE: LoyaltyCards
-          AWS_ACCESS_KEY_ID: dummy
-          AWS_SECRET_ACCESS_KEY: dummy123
-          AWS_REGION: us-east-1
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref LoyaltyCardsTable
     Metadata:
       BuildMethod: esbuild
       BuildProperties:
@@ -150,18 +141,3 @@ Resources:
         Sourcemap: true
         EntryPoints:
           - src/handlers/process-loyalty-card.ts
-
-  ApplicationResourceGroup:
-    Type: AWS::ResourceGroups::Group
-    Properties:
-      Name:
-        Fn::Sub: ApplicationInsights-SAM-${AWS::StackName}
-      ResourceQuery:
-        Type: CLOUDFORMATION_STACK_1_0
-  ApplicationInsightsMonitoring:
-    Type: AWS::ApplicationInsights::Application
-    Properties:
-      ResourceGroupName:
-        Ref: ApplicationResourceGroup
-      AutoConfigurationEnabled: 'true'
-
