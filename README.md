@@ -60,7 +60,7 @@ The local SQS flow uses a small consumer because ElasticMQ cannot directly trigg
 * [x] Application/domain errors
 * [x] HTTP error mapping
 * [x] Centralized dependency creation
-* [ ] Centralized HTTP error handling if needed
+* [x] Centralized HTTP error handling if needed
 
 ### Testing
 
