@@ -1,4 +1,4 @@
-import { LoyaltyCard } from '../models/loyalty-card';
+import { LoyaltyCard } from '../models/loyalty-card.interface';
 
 export interface ILoyaltyCardRepository {
     create(card: LoyaltyCard): Promise<void>;

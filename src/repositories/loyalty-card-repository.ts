@@ -1,6 +1,6 @@
 import { DynamoDBClient, ScanCommand } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient, GetCommand, PutCommand } from '@aws-sdk/lib-dynamodb';
-import { LoyaltyCard } from '../models/loyalty-card';
+import { LoyaltyCard } from '../models/loyalty-card.interface';
 import { ILoyaltyCardRepository } from './loyalty-card-repository.interface';
 
 const client = new DynamoDBClient({

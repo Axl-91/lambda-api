@@ -2,7 +2,7 @@ import { GetObjectCommand } from '@aws-sdk/client-s3';
 import { parse } from 'csv-parse/sync';
 import { S3Event } from 'aws-lambda';
 import { s3Client } from '../infrastructure/s3-client';
-import { LoyaltyCardImport } from '../models/loyalty-card-import';
+import { LoyaltyCardImport } from '../models/loyalty-card-import.interface';
 import { sendMessage } from '../infrastructure/sqs-client';
 
 export const importLoyaltyCards = async (event: S3Event) => {

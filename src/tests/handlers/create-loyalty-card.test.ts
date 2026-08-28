@@ -1,4 +1,5 @@
 import { APIGatewayProxyEvent } from 'aws-lambda';
+import { InvalidLoyaltyCardError } from '../../errors/loyalty-cards-errors';
 import { createLoyaltyCard } from '../../handlers/create-loyalty-card';
 import { loyaltyCardService } from '../../infrastructure/dependencies';
 import { createLoyaltyCardFixture } from '../factories/loyalty-card-factory';
@@ -37,15 +38,15 @@ describe('createLoyaltyCard', () => {
         expect(createMock).toHaveBeenCalledWith(customerName);
     });
 
-    it('should return 500 when the customer name is missing', async () => {
-        createMock.mockRejectedValue(new Error('customerName is required'));
+    it('should return 400 when the customer name is missing', async () => {
+        createMock.mockRejectedValue(new InvalidLoyaltyCardError('customerName is required'));
 
         const result = await createLoyaltyCard(createEvent(null));
 
         expect(result).toEqual({
-            statusCode: 500,
+            statusCode: 400,
             body: JSON.stringify({
-                message: 'some error happened',
+                message: 'customerName is required',
             }),
         });
 
@@ -58,7 +59,7 @@ describe('createLoyaltyCard', () => {
         expect(result).toEqual({
             statusCode: 500,
             body: JSON.stringify({
-                message: 'some error happened',
+                message: 'Internal server error',
             }),
         });
 

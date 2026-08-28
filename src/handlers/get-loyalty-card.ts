@@ -1,6 +1,6 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { loyaltyCardService } from '../infrastructure/dependencies';
-import { InvalidLoyaltyCardError, LoyaltyCardNotFoundError } from '../errors/loyalty-cards-errors';
+import { handleHttpError } from '../utils/http-error-handler';
 
 export const getLoyaltyCard = async (
     event: APIGatewayProxyEvent,
@@ -15,31 +15,6 @@ export const getLoyaltyCard = async (
             body: JSON.stringify(loyaltyCard),
         };
     } catch (err) {
-        console.log(err);
-
-        if (err instanceof InvalidLoyaltyCardError) {
-            return {
-                statusCode: 400,
-                body: JSON.stringify({
-                    message: err.message,
-                }),
-            };
-        }
-
-        if (err instanceof LoyaltyCardNotFoundError) {
-            return {
-                statusCode: 404,
-                body: JSON.stringify({
-                    message: err.message,
-                }),
-            };
-        }
-
-        return {
-            statusCode: 500,
-            body: JSON.stringify({
-                message: 'Internal server error',
-            }),
-        };
+        return handleHttpError(err);
     }
 };

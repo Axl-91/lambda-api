@@ -1,5 +1,6 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { loyaltyCardService } from '../infrastructure/dependencies';
+import { handleHttpError } from '../utils/http-error-handler';
 
 export const createLoyaltyCard = async (
     event: APIGatewayProxyEvent,
@@ -13,12 +14,6 @@ export const createLoyaltyCard = async (
             body: JSON.stringify(loyaltyCard),
         };
     } catch (err) {
-        console.log(err);
-        return {
-            statusCode: 500,
-            body: JSON.stringify({
-                message: 'some error happened',
-            }),
-        };
+        return handleHttpError(err);
     }
 };

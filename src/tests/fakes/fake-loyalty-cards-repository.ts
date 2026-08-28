@@ -1,4 +1,4 @@
-import { LoyaltyCard } from '../../models/loyalty-card';
+import { LoyaltyCard } from '../../models/loyalty-card.interface';
 import { ILoyaltyCardRepository } from '../../repositories/loyalty-card-repository.interface';
 
 export class FakeLoyaltyCardRepository implements ILoyaltyCardRepository {

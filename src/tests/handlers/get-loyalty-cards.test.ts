@@ -41,7 +41,7 @@ describe('getLoyaltyCards', () => {
         expect(result).toEqual({
             statusCode: 500,
             body: JSON.stringify({
-                message: 'some error happened',
+                message: 'Internal server error',
             }),
         });
 

@@ -1,4 +1,4 @@
-import { LoyaltyCard } from '../models/loyalty-card';
+import { LoyaltyCard } from '../models/loyalty-card.interface';
 import { v4 as uuidv4 } from 'uuid';
 import { InvalidLoyaltyCardError, LoyaltyCardNotFoundError } from '../errors/loyalty-cards-errors';
 import { ILoyaltyCardRepository } from '../repositories/loyalty-card-repository.interface';
@@ -8,7 +8,7 @@ export class LoyaltyCardService {
 
     async create(customerName: string): Promise<LoyaltyCard> {
         if (customerName.trim().length === 0) {
-            throw new Error('customerName is required');
+            throw new InvalidLoyaltyCardError('customerName is required');
         }
 
         const loyaltyCard: LoyaltyCard = {
